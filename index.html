@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="in">
+<head>
+    <meta charset="UTF-8">
+    
+    <title>Judul halaman</title>
+</head>
+<body>
+    <input type="text" id="videoURL" placeholder="Paste YouTube video link">
+<button id="downloadButton">Download</button>
+
+<script>
+  // Fungsi untuk mengunduh video dari URL yang diberikan
+  function downloadVideo(url) {
+    fetch('/download', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ url: url })
+    })
+    .then(response => response.blob())
+    .then(blob => {
+      const downloadURL = URL.createObjectURL(blob);
+      const downloadLink = document.createElement('a');
+      
+      downloadLink.href = downloadURL;
+      downloadLink.download = 'video.mp4';
+      downloadLink.click();
+
+      URL.revokeObjectURL(downloadURL);
+    })
+    .catch(error => {
+      console.error('Terjadi kesalahan saat mengunduh video:', error);
+    });
+  }
+
+ document.getElementById('downloadButton').addEventListener('click', function() {
+    const videoURL = document.getElementById('videoURL').value;
+    downloadVideo(videoURL);
+  });
+</script>
+
+</body>
+</html>
